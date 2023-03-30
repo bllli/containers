@@ -9,13 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKER_NAMESPACE: blllicn
       PHP8_VERSION: 8.1.11
       CADDY_VERSION: 2.6.1
       COMPOSER: COMPOSER_MEMORY_LIMIT=-1 composer
-      IMAGE_NAME_BENCODE: ${{ secrets.DOCKER_USERNAME }}/php-ext-bencode:${{env.PHP8_VERSION}}-fpm-bullseye
-      IMAGE_NAME_CADDY: ${{ secrets.DOCKER_USERNAME }}/caddy-ext:${{env.CADDY_VERSION}}
-      IMAGE_NAME_PHP8: ${{ secrets.DOCKER_USERNAME }}/phpfpm-caddy:${{env.PHP8_VERSION}}-$GITHUB_REF_NAME
+      IMAGE_NAME_BENCODE: ${{ secrets.DOCKER_USERNAME }}/php-ext-bencode:${PHP8_VERSION}-fpm-bullseye
+      IMAGE_NAME_CADDY: ${{ secrets.DOCKER_USERNAME }}/caddy-ext:${env.CADDY_VERSION}
+      IMAGE_NAME_PHP8: ${{ secrets.DOCKER_USERNAME }}/phpfpm-caddy:${env.PHP8_VERSION}-$GITHUB_REF_NAME
   
     steps:
     - uses: actions/checkout@v3
