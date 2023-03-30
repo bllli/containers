@@ -34,6 +34,6 @@ jobs:
     - run: docker tag ${{ env.IMAGE_NAME_BENCODE }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}
 
-    - run: docker build ./base-image/php --file ./base-image/php/php8.Dockerfile --tag ${IMAGE_NAME_PHP8} --build-arg PHP_VER_TAG=${{ env.PHP_VER_TAG }},PHP_EXT_BENCODE_VERSION=${{ env.PHP_EXT_BENCODE_VERSION }},CADDY_VERSION=${{ env.CADDY_VERSION }}
+    - run: docker build ./base-image/php --file ./base-image/php/php8.Dockerfile --tag ${IMAGE_NAME_PHP8} --build-arg PHP_VER_TAG=${{ env.PHP_VER_TAG }} --build-arg PHP_EXT_BENCODE_VERSION=${{ env.PHP_EXT_BENCODE_VERSION }} --build-arg CADDY_VERSION=${{ env.CADDY_VERSION }}
     - run: docker tag ${{ env.IMAGE_NAME_PHP8 }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }}
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }}
