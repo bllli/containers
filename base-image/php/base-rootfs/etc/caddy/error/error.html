@@ -1,0 +1,108 @@
+{{$http_status := placeholder "http.error.status_code" | atoi}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- https://caddyserver.com/docs/json/apps/http/#servers/errors/routes -->
+    <title>
+        {{placeholder "http.error.status_code"}}
+        {{placeholder "http.error.status_text"}}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{ if eq $http_status 502 }}
+    <meta http-equiv="refresh" content="120">
+    {{ end }}
+
+    <style>
+        html {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Open Sans, Arial;
+            color: #454545;
+            font-size: 16px;
+            margin: 2em auto;
+            max-width: 800px;
+            padding: 1em;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .error-middle {
+            display: block;
+            vertical-align: middle;
+        }
+
+        html {
+            {{ if ge $http_status 500 }}
+                background-color: #e74c3c;
+            {{ else }}
+                background-color: #78909c;
+            {{ end }}
+        }
+
+        body {
+            color: #fefefe;
+        }
+
+        .the-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-middle">
+        {{ if ge $http_status 500 }}
+        <h1>We are updating our website </h1>
+        <p>This is only for a few seconds, you will be redirected.</p>
+        {{ else }}
+        <h1>
+            <!--# echo var="status_text" default="Something goes wrong" -->
+            {{ placeholder "http.error.status_text" }}
+        </h1>
+        {{ end }}
+
+        <h2>Visitor info</h2>
+        <p><span class="the-title">Visitor IP address:</span>
+            <!-- {{.RemoteIP}} -->
+            {{ placeholder "http.request.remote"}}
+        </p>
+        <p><span class="the-title">Visitor User agent:</span>
+            {{.Req.Header.Get "User-Agent"}}
+        </p>
+
+        <h2>Server info</h2>
+        <p><span class="the-title">Server local time:</span>
+            {{ now | date "2006-01-02 15:04:05" }}
+        </p>
+        <p><span class="the-title">Server time (GMT):</span>
+            {{ dateInZone "2006-01-02 15:04:05" now "UTC" }}
+        </p>
+
+        <pre>
+   ＼
+    ＼
+        .--.
+       |o_o |
+       |:_/ |
+      //   ＼ \
+     (|     | )
+    / ＼_  _/`\
+    \___)=(___/
+  </pre>
+        <!-- caddy error page by 荒野無燈 -->
+        <!-- css by https://github.com/denysvitali/nginx-error-pages -->
+    </div>
+</body>
+
+</html>
