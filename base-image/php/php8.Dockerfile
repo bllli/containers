@@ -103,7 +103,8 @@ RUN set -eux; \
     \
     /tini --version
 
-COPY --from=caddy-ext:2.6.1 /usr/bin/caddy /usr/bin/caddy
+ARG CADDY_VERSION=2.6.1
+COPY --from=caddy-ext:${CADDY_VERSION} /usr/bin/caddy /usr/bin/caddy
 
 # setup composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
