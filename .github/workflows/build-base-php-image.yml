@@ -10,7 +10,7 @@ jobs:
     env:
       PHP8_VERSION: 8.1.11
       CADDY_VERSION: 2.6.1
-      IMAGE_NAME_CADDY: caddy-ext:${{ env.CADDY_VERSION }}
+      IMAGE_NAME_CADDY: caddy-ext:2.6.1
       COMPOSER: COMPOSER_MEMORY_LIMIT=-1 composer
       PHP_VER_TAG: 8.1.11-fpm-bullseye
       PHP_EXT_BENCODE_VERSION: 8.1.11-fpm-bullseye
