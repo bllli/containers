@@ -48,12 +48,12 @@ jobs:
     - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }} ${{ env.IMAGE_NAME_CADDY }}
     - run: docker images
 
-    - name: Build and push Docker image - ${{ env.IMAGE_NAME_CADDY }}
+    - name: Build and push Docker image - ${{ env.IMAGE_NAME_BENCODE }}
       uses: docker/build-push-action@v4
       with:
         context: ./base-image/php
         file: ./base-image/php/bencode.Dockerfile
-        tags: ${{ env.IMAGE_NAME_BENCODE }}
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}
         build-args: |
           PHP_VER_TAG=${{ env.PHP_VER_TAG }}
         load: true
@@ -66,6 +66,7 @@ jobs:
     - run: sed -i "s/${PHP_EXT_BENCODE_VERSION}/${{ env.IMAGE_NAME_BENCODE }}/g" ./base-image/php/php8.Dockerfile
     - run: sed -i "s/${CADDY_VERSION}/${{ env.IMAGE_NAME_CADDY }}/g" ./base-image/php/php8.Dockerfile
     - run: cat ./base-image/php/php8.Dockerfile
+
     - name: Build and push Docker image - ${{ env.IMAGE_NAME_PHP8 }}
       uses: docker/build-push-action@v4
       with:
