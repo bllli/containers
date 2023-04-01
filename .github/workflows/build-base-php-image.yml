@@ -44,6 +44,9 @@ jobs:
         tags: ${{ env.IMAGE_NAME_CADDY }}
         build-args: |
           CADDY_VERSION=${{ env.CADDY_VERSION }}
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - run: docker images
 
@@ -56,6 +59,9 @@ jobs:
         tags: ${{ env.IMAGE_NAME_BENCODE }}
         build-args: |
           PHP_VER_TAG=${{ env.PHP_VER_TAG }}
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - run: docker images
 
@@ -71,3 +77,6 @@ jobs:
           PHP_EXT_BENCODE_VERSION=${{ env.PHP_EXT_BENCODE_VERSION }}
           CADDY_VERSION=${{ env.CADDY_VERSION }}
           TINI_VERSION=${{ env.TINI_VERSION }}
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

@@ -2,7 +2,7 @@ ARG PHP_EXT_BENCODE_VERSION=8.1.11-fpm-bullseye
 FROM <DOCKER_USERNAME>/php-ext-bencode:${PHP_EXT_BENCODE_VERSION} as php-ext-bencode-builder
 
 ARG CADDY_VERSION=2.6.1
-FROM <DOCKER_USERNAME>caddy-ext:${CADDY_VERSION} as caddy-ext-builder
+FROM <DOCKER_USERNAME>/caddy-ext:${CADDY_VERSION} as caddy-ext-builder
 
 
 ARG PHP_VER_TAG=8.1.11-fpm-bullseye
