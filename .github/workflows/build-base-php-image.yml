@@ -33,19 +33,19 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     
-    # - name: Build and push Docker image - ${{ env.IMAGE_NAME_CADDY }}
-    #   uses: docker/build-push-action@v4
-    #   with:
-    #     context: ./base-image/php
-    #     file: ./base-image/php/caddy2.Dockerfile
-    #     tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}
-    #     build-args: |
-    #       CADDY_VERSION=${{ env.CADDY_VERSION }}
-    #     load: true
-    #     cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }},mode=max
-    #     cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }} .
+    - name: Build and push Docker image - ${{ env.IMAGE_NAME_CADDY }}
+      uses: docker/build-push-action@v4
+      with:
+        context: ./base-image/php
+        file: ./base-image/php/caddy2.Dockerfile
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}
+        build-args: |
+          CADDY_VERSION=${{ env.CADDY_VERSION }}
+        load: true
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}-buildcache,mode=max
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}-buildcache .
 
-    - run: docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}
+    - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}
     - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }} ${{ env.IMAGE_NAME_CADDY }}
     - run: docker images
 
@@ -58,9 +58,10 @@ jobs:
         build-args: |
           PHP_VER_TAG=${{ env.PHP_VER_TAG }}
         load: true
-        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }},mode=max
-        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }} .
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}-buildcache,mode=max
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}-buildcache .
     
+    - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}
     - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }} ${{ env.IMAGE_NAME_BENCODE }}
     - run: docker images
 
@@ -80,5 +81,5 @@ jobs:
           CADDY_VERSION=${{ env.CADDY_VERSION }}
           TINI_VERSION=${{ env.TINI_VERSION }}
         push: true
-        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }},mode=max
-        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }} .
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }}-buildcache,mode=max
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }}-buildcache .
