@@ -65,8 +65,8 @@ jobs:
     
     - run: docker images
 
-    - run: sed -i "s/\${PHP_EXT_BENCODE_VERSION}/${{ env.PHP_EXT_BENCODE_VERSION }}/g" ./base-image/php/php8.Dockerfile
-    - run: sed -i "s/\${CADDY_VERSION}/${{ env.CADDY_VERSION }}/g" ./base-image/php/php8.Dockerfile
+    - run: sed -i "s/<PHP_EXT_BENCODE_IMAGE>/${{ secrets.DOCKER_USERNAME }}\/${{ env.IMAGE_NAME_BENCODE }}/g" ./base-image/php/php8.Dockerfile
+    - run: sed -i "s/<CADDY_EXT_IMAGE>/${{ secrets.DOCKER_USERNAME }}\/${{ env.IMAGE_NAME_CADDY }}/g" ./base-image/php/php8.Dockerfile
     - run: sed -i "s/\${PHP_VER_TAG}/${{ env.PHP_VER_TAG }}/g" ./base-image/php/php8.Dockerfile
 
     - run: cat ./base-image/php/php8.Dockerfile
