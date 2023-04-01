@@ -10,18 +10,20 @@ jobs:
     env:
       PHP8_VERSION: 8.1.11
       CADDY_VERSION: 2.6.1
-      IMAGE_NAME_CADDY: caddy-ext:2.6.1
+      IMAGE_NAME_CADDY: ${{ secrets.DOCKER_USERNAME }}/caddy-ext:2.6.1
       COMPOSER: COMPOSER_MEMORY_LIMIT=-1 composer
       PHP_VER_TAG: 8.1.11-fpm-bullseye
       PHP_EXT_BENCODE_VERSION: 8.1.11-fpm-bullseye
-      IMAGE_NAME_BENCODE: php-ext-bencode:8.1.11-fpm-bullseye
-      IMAGE_NAME_PHP8: phpfpm-caddy:8.1.11-${{ github.sha }}
+      IMAGE_NAME_BENCODE: ${{ secrets.DOCKER_USERNAME }}/php-ext-bencode:8.1.11-fpm-bullseye
+      IMAGE_NAME_PHP8: ${{ secrets.DOCKER_USERNAME }}/phpfpm-caddy:8.1.11-${{ github.sha }}
       TINI_VERSION: v0.19.0
 
     steps:
     - run: export
     - uses: actions/checkout@v3
-    
+
+    - run: sed -i "s/<DOCKER_USERNAME>/${{ secrets.DOCKER_USERNAME }}/g" ./base-image/php/php8.Dockerfile
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
       with:
@@ -39,21 +41,23 @@ jobs:
         context: ./base-image/php
         file: ./base-image/php/caddy2.Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }}
+        tags: ${{ env.IMAGE_NAME_CADDY }}
         build-args: |
           CADDY_VERSION=${{ env.CADDY_VERSION }}
-    - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_CADDY }} ${{ env.IMAGE_NAME_CADDY }}
-    
+
+    - run: docker images
+
     - name: Build and push Docker image - ${{ env.IMAGE_NAME_CADDY }}
       uses: docker/build-push-action@v4
       with:
         context: ./base-image/php
         file: ./base-image/php/bencode.Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }}
+        tags: ${{ env.IMAGE_NAME_BENCODE }}
         build-args: |
           PHP_VER_TAG=${{ env.PHP_VER_TAG }}
-    - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }} ${{ env.IMAGE_NAME_BENCODE }}
+
+    - run: docker images
 
     - name: Build and push Docker image - ${{ env.IMAGE_NAME_PHP8 }}
       uses: docker/build-push-action@v4

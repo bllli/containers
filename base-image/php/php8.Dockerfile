@@ -1,3 +1,10 @@
+ARG PHP_EXT_BENCODE_VERSION=8.1.11-fpm-bullseye
+FROM <DOCKER_USERNAME>/php-ext-bencode:${PHP_EXT_BENCODE_VERSION} as php-ext-bencode-builder
+
+ARG CADDY_VERSION=2.6.1
+FROM <DOCKER_USERNAME>caddy-ext:${CADDY_VERSION} as caddy-ext-builder
+
+
 ARG PHP_VER_TAG=8.1.11-fpm-bullseye
 FROM docker.io/php:${PHP_VER_TAG}
 
@@ -18,9 +25,7 @@ ENV TZ="Asia/Shanghai" \
     PUID=1000 \
     PGID=100
 
-ARG PHP_EXT_BENCODE_VERSION=8.1.11-fpm-bullseye
-
-COPY --from=php-ext-bencode:${PHP_EXT_BENCODE_VERSION} /build/ /
+COPY --from=php-ext-bencode-builder /build/ /
 
 #make sure the file copied successfully
 RUN ls -lhp $(php-config --extension-dir)/bencode.so && \
@@ -103,8 +108,8 @@ RUN set -eux; \
     \
     /tini --version
 
-ARG CADDY_VERSION=2.6.1
-COPY --from=caddy-ext:${CADDY_VERSION} /usr/bin/caddy /usr/bin/caddy
+
+COPY --from=caddy-ext-builder /usr/bin/caddy /usr/bin/caddy
 
 # setup composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
