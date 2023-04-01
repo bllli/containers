@@ -1,11 +1,8 @@
-ARG CADDY_VERSION=2.6.1
-FROM caddy-ext:${CADDY_VERSION} as caddy-ext-builder
-
-ARG PHP_EXT_BENCODE_VERSION=8.1.11-fpm-bullseye
-FROM php-ext-bencode:${PHP_EXT_BENCODE_VERSION} as php-ext-bencode-builder
+FROM <CADDY_EXT_IMAGE> as caddy-ext-builder
+FROM <PHP_EXT_BENCODE_IMAGE> as php-ext-bencode-builder
 
 ARG PHP_VER_TAG=8.1.11-fpm-bullseye
-FROM docker.io/php:${PHP_VER_TAG}
+FROM php:${PHP_VER_TAG}
 
 # pecl mod: https://pecl.php.net/package/redis
 # https://pecl.php.net/package/imagick
@@ -102,7 +99,7 @@ RUN set -eux; \
     rm -rf /tmp/s6.tar.gz; \
     # Add Tini
     curl -Lo/tini \
-    https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-amd64; \
+    https://github.com/krallin/tini/releases/download/$TINI_VERSION/tini-amd64; \
     chmod +x /tini; \
     \
     /tini --version
