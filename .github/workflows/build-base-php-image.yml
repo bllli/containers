@@ -26,7 +26,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
       with:
         buildkitd-flags: --debug
-    
+
     - name: Log in to Docker Hub
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
@@ -63,8 +63,8 @@ jobs:
     - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }} ${{ env.IMAGE_NAME_BENCODE }}
     - run: docker images
 
-    - run: sed -i "s/${PHP_EXT_BENCODE_VERSION}/${{ env.IMAGE_NAME_BENCODE }}/g" ./base-image/php/php8.Dockerfile
-    - run: sed -i "s/${CADDY_VERSION}/${{ env.IMAGE_NAME_CADDY }}/g" ./base-image/php/php8.Dockerfile
+    - run: sed -i "s/\${PHP_EXT_BENCODE_VERSION}/${{ env.IMAGE_NAME_BENCODE }}/g" ./base-image/php/php8.Dockerfile
+    - run: sed -i "s/\${CADDY_VERSION}/${{ env.IMAGE_NAME_CADDY }}/g" ./base-image/php/php8.Dockerfile
     - run: cat ./base-image/php/php8.Dockerfile
 
     - name: Build and push Docker image - ${{ env.IMAGE_NAME_PHP8 }}
