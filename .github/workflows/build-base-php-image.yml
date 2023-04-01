@@ -63,6 +63,9 @@ jobs:
     - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_BENCODE }} ${{ env.IMAGE_NAME_BENCODE }}
     - run: docker images
 
+    - run: sed -i "s/${PHP_EXT_BENCODE_VERSION}/${{ env.IMAGE_NAME_BENCODE }}/g" ./base-image/php/php8.Dockerfile
+    - run: sed -i "s/${CADDY_VERSION}/${{ env.IMAGE_NAME_CADDY }}/g" ./base-image/php/php8.Dockerfile
+    - run: cat ./base-image/php/php8.Dockerfile
     - name: Build and push Docker image - ${{ env.IMAGE_NAME_PHP8 }}
       uses: docker/build-push-action@v4
       with:
