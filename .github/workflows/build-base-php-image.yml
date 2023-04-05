@@ -8,16 +8,16 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PHP8_VERSION: 8.1.11
-      CADDY_VERSION: 2.6.1
-      IMAGE_NAME_CADDY: caddy-ext:2.6.1
+      PHP8_VERSION: 8.1.17
+      CADDY_VERSION: 2.6.2
+      IMAGE_NAME_CADDY: caddy-ext:2.6.2
       COMPOSER: COMPOSER_MEMORY_LIMIT=-1 composer
-      PHP_VER_TAG: 8.1.11-fpm-bullseye
-      PHP_EXT_BENCODE_VERSION: 8.1.11-fpm-bullseye
-      IMAGE_NAME_BENCODE: php-ext-bencode:8.1.11-fpm-bullseye
-      IMAGE_NAME_PHP8: phpfpm-caddy:8.1.11
+      PHP_VER_TAG: 8.1.17-fpm-bullseye
+      PHP_EXT_BENCODE_VERSION: 8.1.17-fpm-bullseye
+      IMAGE_NAME_BENCODE: php-ext-bencode:8.1.17-fpm-bullseye
+      IMAGE_NAME_PHP8: phpfpm-caddy:8.1.17
       IMAGE_NAME_PHP8_LATEST: phpfpm-caddy:latest
-      IMAGE_NAME_PHP8_SHA: phpfpm-caddy:8.1.11-${{ github.sha }}
+      IMAGE_NAME_PHP8_SHA: phpfpm-caddy:8.1.17-${{ github.sha }}
       TINI_VERSION: v0.19.0
 
     steps:

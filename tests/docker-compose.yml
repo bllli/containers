@@ -1,9 +1,10 @@
 services:
   web:
-    image: blllicn/phpfpm-caddy:8.1.11-d525742f7e76196dfe37fd612ee640ef3130f6dc
+    image: blllicn/phpfpm-caddy:latest
     volumes:
       - "./app/public:/app/public"
       - "./svc:/etc/svc.d"
+      - "./caddy:/etc/caddy"
     ports:
       - "80:80"
     # network_mode: "host"

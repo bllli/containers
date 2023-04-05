@@ -1,6 +1,8 @@
-FROM blllicn/caddy-ext:2.6.1 as caddy-ext-builder
-FROM blllicn/php-ext-bencode:8.1.11-fpm-bullseye as php-ext-bencode-builder
-FROM php:8.1.11-fpm-bullseye
+FROM <CADDY_EXT_IMAGE> as caddy-ext-builder
+FROM <PHP_EXT_BENCODE_IMAGE> as php-ext-bencode-builder
+
+ARG PHP_VER_TAG=8.1.11-fpm-bullseye
+FROM php:${PHP_VER_TAG}
 
 # pecl mod: https://pecl.php.net/package/redis
 # https://pecl.php.net/package/imagick

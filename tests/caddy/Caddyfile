@@ -1,0 +1,68 @@
+# must formated caddy fmt
+# Global options https://caddyserver.com/docs/caddyfile/options
+{
+	# debug
+	http_port 80
+	https_port 443
+	order realip first
+	auto_https off
+	local_certs
+	admin 0.0.0.0:2019
+}
+
+# Don't use double quotes when setting a default value.
+# If you do, it gets treated as a single token, which is invalid
+# https://caddyserver.com/docs/caddyfile/concepts#tokens-and-quotes
+{$SITE_ADDRESS:http://example.localhost, https://example.localhost} {
+	root * /app/public
+
+	# https://caddyserver.com/docs/caddyfile/directives/php_fastcgi
+	php_fastcgi 127.0.0.1:9000 {
+		# allow explicitly set SERVER_PORT for xdebug from env var PHP_SERVER_PORT
+		# PhpStorm complains:
+		# Cannot accept external Xdebug connection: Cannot evaluate expression '$_SERVER['SERVER_PORT']'
+		# see https://caddy.community/t/update-to-topic-v2-caddy-config-help/8714/5
+		env SERVER_PORT "{$PHP_SERVER_PORT:443}"
+		try_files {path} {path}/index.php =404
+	}
+
+	file_server
+
+	# https://github.com/kirsch33/realip
+	realip {
+		header "CF-Connecting-IP"
+		from cloudflare
+		maxhops 2
+	}
+
+	@blocked {
+		path */.* */composer.* */Dockerfile *.Dockerfile *.torrent */config.php */common.php.* /torrents/* /subs/* /config/* /vendor/* /.git/* */Makefile /*.sh
+	}
+	error @blocked 403
+
+	handle_errors {
+		# @4xx {
+		# 	expression `{http.error.status_code} >= 400 && {http.error.status_code} < 500`
+		# }
+		# @5xx {
+		# 	expression `{http.error.status_code} >= 500 && {http.error.status_code} < 600`
+		# }
+		# rewrite @4xx /4xx.html
+		# rewrite @5xx /5xx.html
+		rewrite * /error.html
+		root * /etc/caddy/error
+		templates
+		file_server
+	}
+}
+
+http://127.0.0.1 {
+	# intercept request for status page
+	reverse_proxy /fpmstatus 127.0.0.1:9000 {
+		transport fastcgi {
+			dial_timeout 3s
+			read_timeout 3s
+			write_timeout 3s
+		}
+	}
+}
