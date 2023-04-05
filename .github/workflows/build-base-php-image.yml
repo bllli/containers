@@ -1,9 +1,9 @@
-name: build base php image
+name: build images
 on: [push]
 
 jobs:
 
-  build_and_push_to_registry:
+  build-base-php-image:
 
     runs-on: ubuntu-latest
 
@@ -94,3 +94,48 @@ jobs:
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8 }}
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8_SHA }}
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8_LATEST }}
+
+  build-mediawiki:
+    runs-on: ubuntu-latest
+
+    env:
+      MEDIAWIKI_MAJOR_VERSION: 1.39
+      MEDIAWIKI_VERSION: 1.39.0
+      IMAGE_NAME_PHP8_LATEST: phpfpm-caddy:latest
+      IMAGE_NAME_MEDIAWIKI: mediawiki:1.39.0
+      IMAGE_NAME_MEDIAWIKI_LATEST: mediawiki:latest
+      IMAGE_NAME_MEDIAWIKI_SHA: mediawiki:1.39.0-${{ github.sha }}
+
+    steps:
+    - run: export
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        buildkitd-flags: --debug
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - run: sed -i "s/<DOCKER_USERNAME>/${{ secrets.DOCKER_USERNAME }}/g" ./mediawiki/Dockerfile
+
+    - name: Build and push Docker image - ${{ env.IMAGE_NAME_MEDIAWIKI }}
+      uses: docker/build-push-action@v4
+      with:
+        context: ./mediawiki
+        file: ./mediawiki/Dockerfile
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }}
+        load: true
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }}-buildcache,mode=max
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }}-buildcache
+    
+    - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI_SHA }}
+    - run: docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI_LATEST }}
+
+    - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI }}
+    - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI_SHA }}
+    - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_MEDIAWIKI_LATEST }}
