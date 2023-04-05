@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -eu
+
+exec 2>&1
+
+COMMAND=/usr/bin/caddy
+
+# Check command is executable or not
+test -x ${COMMAND} || (echo "err: command ${COMMAND} is not executable." && exit 1)
+
+UMASK_SET=${UMASK_SET:-000}
+# Allow groups to change files.
+# umask 002
+
+umask ${UMASK_SET}
+
+# run the service
+echo "service start: caddy"
+${COMMAND} run --adapter caddyfile --config /etc/caddy/Caddyfile

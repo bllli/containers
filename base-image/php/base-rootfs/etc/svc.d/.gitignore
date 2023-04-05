@@ -1,2 +1,9 @@
 *
 !.gitignore
+!.s6-svscan
+!.s6-svscan/crash
+!.s6-svscan/finish
+!caddy
+!caddy/run
+!fpm
+!fpm/run
