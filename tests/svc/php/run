@@ -1,0 +1,2 @@
+#!/bin/bash
+docker-php-entrypoint -c /usr/local/etc/php-fpm.d/www.conf

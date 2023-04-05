@@ -1,0 +1,12 @@
+services:
+  web:
+    image: blllicn/phpfpm-caddy:8.1.11-d525742f7e76196dfe37fd612ee640ef3130f6dc
+    volumes:
+      - "./app/public:/app/public"
+      - "./svc:/etc/svc.d"
+    ports:
+      - "80:80"
+    # network_mode: "host"
+    # command: ["ls", "-lha", "/etc/svc.d"]
+    # command: ["ls", "-lha", "/usr/bin"]
+    # command: ["docker-php-entrypoint", "-c", "/usr/local/etc/php-fpm.d/www.conf"]
