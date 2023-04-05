@@ -19,7 +19,7 @@ services:
     #     http_proxy: http://192.168.91.1:7890
     volumes:
       # - "./app/public:/app/public"
-      - "./svc:/etc/svc.d"
+      # - "./svc:/etc/svc.d"
       - "./caddy:/etc/caddy"
       - './app/public/LocalSettings.php:/app/public/LocalSettings.php'
     depends_on:
@@ -27,6 +27,5 @@ services:
     ports:
       - "80:80"
     # network_mode: "host"
-    # command: ["ls", "-lha", "/etc/svc.d"]
     # command: ["ls", "-lha", "/usr/bin"]
     # command: ["docker-php-entrypoint", "-c", "/usr/local/etc/php-fpm.d/www.conf"]

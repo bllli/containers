@@ -96,6 +96,7 @@ jobs:
     - run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME_PHP8_LATEST }}
 
   build-mediawiki:
+    needs: [build-base-php-image]
     runs-on: ubuntu-latest
 
     env:
